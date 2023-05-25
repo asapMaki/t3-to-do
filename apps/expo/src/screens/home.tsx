@@ -1,7 +1,7 @@
 import React from "react";
 
 import { Button, Text, TextInput, TouchableOpacity, View } from "react-native";
-import { useAuth } from "@clerk/clerk-expo";
+import { useAuth, useUser } from "@clerk/clerk-expo";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { FlashList } from "@shopify/flash-list";
 import type { inferProcedureOutput } from "@trpc/server";
@@ -10,7 +10,7 @@ import type { AppRouter } from "@acme/api";
 import { trpc } from "../utils/trpc";
 
 const SignOut = () => {
-  const { signOut } = useAuth();
+  const { signOut, userId } = useAuth();
   return (
     <View className="rounded-lg border-2 border-gray-500 p-4">
       <Button
@@ -35,6 +35,9 @@ const PostCard: React.FC<{
 };
 
 const CreatePost: React.FC = () => {
+  const { signOut, userId } = useAuth();
+  const { isLoaded, isSignedIn, user } = useUser();
+  console.log({ isLoaded, isSignedIn, userId });
   const utils = trpc.useContext();
   const { mutate } = trpc.post.create.useMutation({
     async onSuccess() {

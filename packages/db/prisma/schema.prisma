@@ -1,17 +1,41 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
     provider = "prisma-client-js"
 }
 
 datasource db {
-    provider = "sqlite"
-    url      = env("DATABASE_URL")
+    provider          = "postgresql"
+    url               = env("DATABASE_URL")
+    shadowDatabaseUrl = env("SHADOW_DATABASE_URL") // Only needed when using a cloud provider that doesn't support the creation of new databases, like Neon. Learn more: https://pris.ly/d/migrate-shadow
 }
 
-model Post {
-    id      String @id @default(cuid())
-    title   String
-    content String
+model Task {
+    id        String   @id @default(uuid())
+    name      String
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    completed Boolean  @default(false)
+
+    User      User?    @relation(fields: [userId], references: [id])
+    userId    String?
+    Project   Project? @relation(fields: [projectId], references: [id])
+    projectId String?
+}
+
+model Project {
+    id        String   @id @default(uuid())
+    name      String
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    tasks     Task[]
+    User      User?    @relation(fields: [userId], references: [id])
+    userId    String?
+
+    @@unique([name])
+}
+
+model User {
+    id      String    @id
+    name    String
+    Task    Task[]
+    Project Project[]
 }

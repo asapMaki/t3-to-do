@@ -6,7 +6,7 @@ import { useWarmUpBrowser } from "../hooks/useWarmUpBrowser";
 const SignInWithOAuth = () => {
   useWarmUpBrowser();
 
-  const { startOAuthFlow } = useOAuth({ strategy: "oauth_discord" });
+  const { startOAuthFlow } = useOAuth({ strategy: "oauth_github" });
 
   const handleSignInWithDiscordPress = React.useCallback(async () => {
     try {
@@ -16,8 +16,9 @@ const SignInWithOAuth = () => {
         setActive({ session: createdSessionId });
       } else {
         // Modify this code to use signIn or signUp to set this missing requirements you set in your dashboard.
-        throw new Error("There are unmet requirements, modifiy this else to handle them")
-
+        throw new Error(
+          "There are unmet requirements, modifiy this else to handle them",
+        );
       }
     } catch (err) {
       console.log(JSON.stringify(err, null, 2));
@@ -28,11 +29,11 @@ const SignInWithOAuth = () => {
   return (
     <View className="rounded-lg border-2 border-gray-500 p-4">
       <Button
-        title="Sign in with Discord"
+        title="Sign in with Github"
         onPress={handleSignInWithDiscordPress}
       />
     </View>
   );
-}
+};
 
 export default SignInWithOAuth;
