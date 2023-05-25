@@ -5,8 +5,8 @@ import "swagger-ui-react/swagger-ui.css";
 const SwaggerUI = dynamic(() => import("swagger-ui-react"), { ssr: false });
 
 const IS_SERVER = typeof window === "undefined";
-const origin = IS_SERVER
-  ? process.env.NEXT_PUBLIC_API_URL
+export const origin = IS_SERVER
+  ? process.env.VERCEL_URL
   : window.location.origin;
 
 const Api: NextPage = () => {
