@@ -1,4 +1,5 @@
 generator client {
+    // provider = "prisma-client-js"
     provider         = "zod-prisma-types"
     useMultipleFiles = true // default is false
 }
@@ -35,8 +36,9 @@ model Project {
 }
 
 model User {
-    id      String    @id
-    name    String
-    Task    Task[]
-    Project Project[]
+    id              String    @id
+    username        String?
+    profileImageUrl String?
+    Task            Task[]
+    Project         Project[]
 }

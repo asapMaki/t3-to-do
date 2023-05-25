@@ -13,7 +13,8 @@ import { UserCountOutputTypeArgsSchema } from "../outputTypeSchemas/UserCountOut
 
 export const UserSelectSchema: z.ZodType<Prisma.UserSelect> = z.object({
   id: z.boolean().optional(),
-  name: z.boolean().optional(),
+  username: z.boolean().optional(),
+  profileImageUrl: z.boolean().optional(),
   Task: z.union([z.boolean(),z.lazy(() => TaskFindManyArgsSchema)]).optional(),
   Project: z.union([z.boolean(),z.lazy(() => ProjectFindManyArgsSchema)]).optional(),
   _count: z.union([z.boolean(),z.lazy(() => UserCountOutputTypeArgsSchema)]).optional(),

@@ -4,7 +4,8 @@ import { ProjectUncheckedCreateNestedManyWithoutUserInputSchema } from './Projec
 
 export const UserUncheckedCreateWithoutTaskInputSchema: z.ZodType<Prisma.UserUncheckedCreateWithoutTaskInput> = z.object({
   id: z.string(),
-  name: z.string(),
+  username: z.string().optional().nullable(),
+  profileImageUrl: z.string().optional().nullable(),
   Project: z.lazy(() => ProjectUncheckedCreateNestedManyWithoutUserInputSchema).optional()
 }).strict();
 
