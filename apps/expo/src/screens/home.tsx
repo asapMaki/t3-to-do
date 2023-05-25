@@ -10,7 +10,7 @@ import type { AppRouter } from "@acme/api";
 import { trpc } from "../utils/trpc";
 
 const SignOut = () => {
-  const { signOut, userId } = useAuth();
+  const { signOut } = useAuth();
   return (
     <View className="rounded-lg border-2 border-gray-500 p-4">
       <Button
@@ -24,29 +24,25 @@ const SignOut = () => {
 };
 
 const PostCard: React.FC<{
-  post: inferProcedureOutput<AppRouter["post"]["all"]>[number];
+  post: inferProcedureOutput<AppRouter["task"]["all"]>[number];
 }> = ({ post }) => {
   return (
     <View className="rounded-lg border-2 border-gray-500 p-4">
       <Text className="text-xl font-semibold text-[#cc66ff]">{post.title}</Text>
-      <Text className="text-white">{post.content}</Text>
+      <Text className="text-white">{post.name}</Text>
     </View>
   );
 };
 
 const CreatePost: React.FC = () => {
-  const { signOut, userId } = useAuth();
-  const { isLoaded, isSignedIn, user } = useUser();
-  console.log({ isLoaded, isSignedIn, userId });
   const utils = trpc.useContext();
-  const { mutate } = trpc.post.create.useMutation({
+  const { mutate } = trpc.task.create.useMutation({
     async onSuccess() {
-      await utils.post.all.invalidate();
+      await utils.task.all.invalidate();
     },
   });
 
   const [title, onChangeTitle] = React.useState("");
-  const [content, onChangeContent] = React.useState("");
 
   return (
     <View className="flex flex-col border-t-2 border-gray-500 p-4">
@@ -55,17 +51,12 @@ const CreatePost: React.FC = () => {
         onChangeText={onChangeTitle}
         placeholder="Title"
       />
-      <TextInput
-        className="mb-2 rounded border-2 border-gray-500 p-2 text-white"
-        onChangeText={onChangeContent}
-        placeholder="Content"
-      />
+
       <TouchableOpacity
         className="rounded bg-[#cc66ff] p-2"
         onPress={() => {
           mutate({
-            title,
-            content,
+            name: title,
           });
         }}
       >
@@ -76,7 +67,7 @@ const CreatePost: React.FC = () => {
 };
 
 export const HomeScreen = () => {
-  const postQuery = trpc.post.all.useQuery();
+  const postQuery = trpc.task.all.useQuery();
   const [showPost, setShowPost] = React.useState<string | null>(null);
 
   return (

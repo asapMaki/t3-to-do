@@ -44,6 +44,7 @@ export const TRPCProvider: React.FC<{
         httpBatchLink({
           async headers() {
             const authToken = await getToken();
+            console.log("authToken", authToken);
             return {
               Authorization: authToken ?? undefined,
             };
