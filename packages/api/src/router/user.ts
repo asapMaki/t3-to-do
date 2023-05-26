@@ -1,5 +1,5 @@
 import { UserSchema } from "./../../../db/prisma/generated/zod/modelSchema/UserSchema";
-import { router, publicProcedure } from "../trpc";
+import { router, publicProcedure, protectedProcedure } from "../trpc";
 import { z } from "zod";
 
 export const userRouter = router({
@@ -17,10 +17,10 @@ export const userRouter = router({
     .query(({ ctx }) => {
       return ctx.prisma.user.findMany();
     }),
-  // create: protectedProcedure
-  //   .input(UserSchema)
-  //   .output(UserSchema)
-  //   .mutation(async ({ ctx, input }) => {
-  //     return ctx.prisma.user.create({ data: input });
-  //   }),
+  create: protectedProcedure
+    .input(UserSchema)
+    .output(UserSchema)
+    .mutation(async ({ ctx, input }) => {
+      return ctx.prisma.user.create({ data: input });
+    }),
 });
