@@ -47,6 +47,47 @@ export const taskRouter = router({
     .input(z.object({ name: z.string() }))
     .output(TaskSchema)
     .mutation(({ ctx, input }) => {
-      return ctx.prisma.task.create({ data: input });
+      return ctx.prisma.task.create({
+        data: {
+          ...input,
+          userId: ctx.auth.userId,
+        },
+      });
+    }),
+  delete: protectedProcedure
+    .meta({
+      openapi: {
+        method: "DELETE",
+        path: "/tasks/{id}",
+        tags: ["task"],
+        summary: "Delete task",
+      },
+    })
+    .input(z.object({ id: z.string().uuid() }))
+    .output(z.boolean())
+    .mutation(async ({ ctx, input }) => {
+      try {
+        await ctx.prisma.task.delete({ where: { id: input.id } });
+        return true;
+      } catch (e) {
+        return false;
+      }
+    }),
+  update: protectedProcedure
+    .meta({
+      openapi: {
+        method: "PUT",
+        path: "/tasks/{id}",
+        tags: ["task"],
+        summary: "Update task",
+      },
+    })
+    .input(z.object({ id: z.string().uuid(), name: z.string() }))
+    .output(TaskSchema)
+    .mutation(async ({ ctx, input }) => {
+      return await ctx.prisma.task.update({
+        where: { id: input.id },
+        data: { name: input.name },
+      });
     }),
 });

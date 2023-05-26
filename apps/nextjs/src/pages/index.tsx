@@ -3,9 +3,9 @@ import Head from "next/head";
 import { trpc } from "../utils/trpc";
 import type { inferProcedureOutput } from "@trpc/server";
 import type { AppRouter } from "@acme/api";
-import { useAuth, UserButton } from "@clerk/nextjs";
+import { useAuth, UserButton, useUser, useSession } from "@clerk/nextjs";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const TaskCard: React.FC<{
   task: inferProcedureOutput<AppRouter["task"]["all"]>[number];
@@ -99,7 +99,18 @@ const Home: NextPage = () => {
 export default Home;
 
 const AuthShowcase: React.FC = () => {
-  const { isSignedIn } = useAuth();
+  const { user, isSignedIn } = useUser();
+  const { mutate } = trpc.user.create.useMutation();
+
+  useEffect(() => {
+    if (user?.username && user?.profileImageUrl)
+      mutate({
+        id: user.id,
+        username: user.username,
+        profileImageUrl: user.profileImageUrl,
+      });
+  }, [user, mutate]);
+
   const { data: secretMessage } = trpc.auth.getSecretMessage.useQuery(
     undefined,
     { enabled: !!isSignedIn },
