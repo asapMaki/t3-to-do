@@ -1,3 +1,4 @@
+import { clerkClient } from "@clerk/nextjs/server";
 import TaskSchema from "./../../../db/prisma/generated/zod/modelSchema/TaskSchema";
 import { router, publicProcedure, protectedProcedure } from "../trpc";
 import { z } from "zod";
@@ -47,11 +48,28 @@ export const taskRouter = router({
     })
     .input(z.object({ name: z.string() }))
     .output(TaskSchema)
-    .mutation(({ ctx, input }) => {
+    .mutation(async ({ ctx, input }) => {
+      const userId = ctx.auth.userId;
+
+      if (userId) {
+        const user = await clerkClient.users.getUser(userId);
+        const userExists = await ctx.prisma.user.findFirst({
+          where: { id: user.id },
+        });
+        if (user && !userExists)
+          await ctx.prisma.user.create({
+            data: {
+              id: user.id,
+              profileImageUrl: user.profileImageUrl,
+              username: user.username,
+            },
+          });
+      }
+
       return ctx.prisma.task.create({
         data: {
           ...input,
-          userId: ctx.auth.userId,
+          userId,
         },
       });
     }),

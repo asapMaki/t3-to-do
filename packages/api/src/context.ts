@@ -20,29 +20,6 @@ type AuthContextProps = {
  * @see https://beta.create.t3.gg/en/usage/trpc#-servertrpccontextts
  */
 export const createContextInner = async ({ auth }: AuthContextProps) => {
-  async function createUser() {
-    const { userId } = auth;
-    const user = userId ? await clerkClient.users.getUser(userId) : null;
-    const userExists = await prisma.user.findUnique({
-      where: {
-        id: user?.id,
-      },
-    });
-
-    if (!userExists && !!user) {
-      await prisma.user.create({
-        data: {
-          id: user?.id,
-          username: user?.username,
-          profileImageUrl: user?.profileImageUrl,
-        },
-      });
-    }
-    return;
-  }
-
-  await createUser();
-
   return {
     auth,
     prisma,
