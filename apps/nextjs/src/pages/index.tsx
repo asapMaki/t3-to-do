@@ -3,9 +3,9 @@ import Head from "next/head";
 import { trpc } from "../utils/trpc";
 import type { inferProcedureOutput } from "@trpc/server";
 import type { AppRouter } from "@acme/api";
-import { useAuth, UserButton, useUser, useSession } from "@clerk/nextjs";
+import { UserButton, useUser } from "@clerk/nextjs";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 const TaskCard: React.FC<{
   task: inferProcedureOutput<AppRouter["task"]["all"]>[number];
