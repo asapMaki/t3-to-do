@@ -28,16 +28,15 @@ export const createContextInner = async ({ auth }: AuthContextProps) => {
         id: user?.id,
       },
     });
-    console.log("userExists", userExists);
+
     if (!userExists && !!user) {
-      const pris = await prisma.user.create({
+      await prisma.user.create({
         data: {
           id: user?.id,
           username: user?.username,
           profileImageUrl: user?.profileImageUrl,
         },
       });
-      console.log("userExists pris", pris);
     }
     return;
   }

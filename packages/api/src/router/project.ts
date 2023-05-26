@@ -45,7 +45,9 @@ export const projectRouter = router({
     .mutation(async ({ ctx, input }) => {
       const userId = ctx.auth.userId;
 
-      return ctx.prisma.project.create({ data: { ...input, userId } });
+      return ctx.prisma.project.create({
+        data: { ...input, userId },
+      });
     }),
   delete: protectedProcedure
     .meta({
