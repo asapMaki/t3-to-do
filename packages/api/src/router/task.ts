@@ -61,7 +61,8 @@ export const taskRouter = router({
             data: {
               id: user.id,
               profileImageUrl: user.profileImageUrl,
-              username: user.username,
+              username:
+                user?.username || user?.firstName + " " + user?.lastName,
             },
           });
       }
