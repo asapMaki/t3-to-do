@@ -17,10 +17,4 @@ export const userRouter = router({
     .query(({ ctx }) => {
       return ctx.prisma.user.findMany();
     }),
-  create: protectedProcedure
-    .input(UserSchema)
-    .output(UserSchema)
-    .mutation(async ({ ctx, input }) => {
-      return ctx.prisma.user.create({ data: input });
-    }),
 });

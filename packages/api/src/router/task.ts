@@ -35,6 +35,7 @@ export const taskRouter = router({
     .query(async ({ ctx, input }) => {
       return ctx.prisma.task.findFirst({ where: { id: input.id } });
     }),
+
   create: protectedProcedure
     .meta({
       openapi: {
@@ -89,5 +90,20 @@ export const taskRouter = router({
         where: { id: input.id },
         data: { name: input.name },
       });
+    }),
+
+  byUserId: publicProcedure
+    .meta({
+      openapi: {
+        method: "GET",
+        path: "/tasks/user/{id}",
+        tags: ["task"],
+        summary: "Get tasks by user id",
+      },
+    })
+    .input(z.object({ id: z.string() }))
+    .output(z.array(TaskSchema))
+    .query(async ({ ctx, input }) => {
+      return ctx.prisma.task.findMany({ where: { userId: input.id } });
     }),
 });

@@ -29,6 +29,7 @@ const Home: NextPage = () => {
   };
 
   const taskQuery = trpc.task.all.useQuery();
+
   const { mutate } = trpc.task.create.useMutation({
     async onSuccess() {
       await taskQuery.refetch();
@@ -99,17 +100,7 @@ const Home: NextPage = () => {
 export default Home;
 
 const AuthShowcase: React.FC = () => {
-  const { user, isSignedIn } = useUser();
-  const { mutate } = trpc.user.create.useMutation();
-
-  useEffect(() => {
-    if (user?.username && user?.profileImageUrl)
-      mutate({
-        id: user.id,
-        username: user.username,
-        profileImageUrl: user.profileImageUrl,
-      });
-  }, [user, mutate]);
+  const { isSignedIn } = useUser();
 
   const { data: secretMessage } = trpc.auth.getSecretMessage.useQuery(
     undefined,
