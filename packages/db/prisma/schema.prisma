@@ -1,7 +1,7 @@
 generator client {
-    // provider = "prisma-client-js"
-    provider         = "zod-prisma-types"
-    useMultipleFiles = true // default is false
+    provider = "prisma-client-js"
+    // provider         = "zod-prisma-types"
+    // useMultipleFiles = true // default is false
 }
 
 datasource db {
