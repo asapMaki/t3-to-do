@@ -27,4 +27,7 @@ const isAuthed = t.middleware(({ next, ctx }) => {
 
 export const router = t.router;
 export const publicProcedure = t.procedure;
-export const protectedProcedure = t.procedure.use(isAuthed);
+// commenting this out so guys can learn API
+// export const protectedProcedure = t.procedure.use(isAuthed);
+
+export const protectedProcedure = t.procedure;
