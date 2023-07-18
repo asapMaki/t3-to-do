@@ -1,6 +1,13 @@
 import React from "react";
 
-import { Button, Text, TextInput, TouchableOpacity, View } from "react-native";
+import {
+  Button,
+  Image,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { useAuth, useUser } from "@clerk/clerk-expo";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { FlashList } from "@shopify/flash-list";
@@ -24,12 +31,16 @@ const SignOut = () => {
 };
 
 const PostCard: React.FC<{
-  post: inferProcedureOutput<AppRouter["task"]["all"]>[number];
+  post: inferProcedureOutput<AppRouter["user"]["all"]>[number];
 }> = ({ post }) => {
   return (
     <View className="rounded-lg border-2 border-gray-500 p-4">
       <Text className="text-xl font-semibold text-[#cc66ff]">{post.title}</Text>
-      <Text className="text-white">{post.name}</Text>
+      <Text className="text-white">{post.username}</Text>
+      <Image
+        source={{ uri: post.profileImageUrl }}
+        style={{ width: 200, height: 200 }}
+      />
     </View>
   );
 };
@@ -67,7 +78,7 @@ const CreatePost: React.FC = () => {
 };
 
 export const HomeScreen = () => {
-  const postQuery = trpc.task.all.useQuery();
+  const taskQuery = trpc.user.all.useQuery();
   const [showPost, setShowPost] = React.useState<string | null>(null);
 
   return (
@@ -91,7 +102,7 @@ export const HomeScreen = () => {
         </View>
 
         <FlashList
-          data={postQuery.data}
+          data={taskQuery.data}
           estimatedItemSize={20}
           ItemSeparatorComponent={() => <View className="h-2" />}
           renderItem={(p) => (

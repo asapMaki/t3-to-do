@@ -46,31 +46,36 @@ export const taskRouter = router({
         summary: "Create task",
       },
     })
-    .input(z.object({ name: z.string() }))
+    .input(
+      z.object({
+        name: z.string(),
+        projectId: z.string().uuid(),
+      }),
+    )
     .output(TaskSchema)
     .mutation(async ({ ctx, input }) => {
-      const userId = ctx.auth.userId;
+      // const userId = ctx.auth.userId;
 
-      if (userId) {
-        const user = await clerkClient.users.getUser(userId);
-        const userExists = await ctx.prisma.user.findFirst({
-          where: { id: user.id },
-        });
-        if (user && !userExists)
-          await ctx.prisma.user.create({
-            data: {
-              id: user.id,
-              profileImageUrl: user.profileImageUrl,
-              username:
-                user?.username || user?.firstName + " " + user?.lastName,
-            },
-          });
-      }
+      // if (userId) {
+      //   const user = await clerkClient.users.getUser(userId);
+      //   const userExists = await ctx.prisma.user.findFirst({
+      //     where: { id: user.id },
+      //   });
+      //   if (user && !userExists)
+      //     await ctx.prisma.user.create({
+      //       data: {
+      //         id: user.id,
+      //         profileImageUrl: user.profileImageUrl,
+      //         username:
+      //           user?.username || user?.firstName + " " + user?.lastName,
+      //       },
+      //     });
+      // }
 
       return ctx.prisma.task.create({
         data: {
           ...input,
-          userId,
+          // userId,
         },
       });
     }),
@@ -102,7 +107,12 @@ export const taskRouter = router({
         summary: "Update task",
       },
     })
-    .input(z.object({ id: z.string().uuid(), name: z.string() }))
+    .input(
+      z.object({
+        id: z.string().uuid(),
+        name: z.string(),
+      }),
+    )
     .output(TaskSchema)
     .mutation(async ({ ctx, input }) => {
       return await ctx.prisma.task.update({

@@ -8,15 +8,16 @@ import Link from "next/link";
 import { useState } from "react";
 
 const TaskCard: React.FC<{
-  task: inferProcedureOutput<AppRouter["task"]["all"]>[number];
+  task: inferProcedureOutput<AppRouter["user"]["all"]>[number];
 }> = ({ task }) => {
   return (
     <div className="max-w-2xl rounded-lg border-2 border-gray-500 p-4 transition-all hover:scale-[101%]">
       <p>{task.id}</p>
       <h2 className="text-2xl font-bold text-[hsl(280,100%,70%)]">
-        {task.name}
+        {task.username}
       </h2>
-      <p>{task.completed}</p>
+      {/* <p>{task.completed}</p> */}
+      <img src={task.profileImageUrl} alt={task.name} />
     </div>
   );
 };
@@ -28,9 +29,9 @@ const Home: NextPage = () => {
     setName(event.target.value);
   };
 
-  const taskQuery = trpc.task.all.useQuery();
+  const taskQuery = trpc.user.all.useQuery();
 
-  const { mutate } = trpc.task.create.useMutation({
+  const { mutate } = trpc.user.post.useMutation({
     async onSuccess() {
       await taskQuery.refetch();
     },
@@ -41,7 +42,11 @@ const Home: NextPage = () => {
   ) => {
     event.preventDefault();
     if (name.trim() !== "") {
-      mutate({ name });
+      mutate({
+        username: name,
+        profileImageUrl: "https://picsum.photos/200",
+        id: Math.random().toString(),
+      });
       setName("");
     }
   };
